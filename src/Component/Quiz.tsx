@@ -1,67 +1,15 @@
 import React, { useState, createContext, useContext } from 'react';
 import { quizData } from '../Data/Quizdata';
-import Swal from 'sweetalert2';
+import { QuizContext } from '../Context/Quizcontext';
+import { QuizContextType } from '../Context/Quizcontext';
+
 
 export type QuizProps = {
   setShowQuiz: (value: boolean) => void;
+  setShowTimer: (value: boolean) => void;
 };
 
-type QuizProviderProps = {
-  children: React.ReactNode;
-  setShowQuiz: (value: boolean) => void;
-};
-
-type QuizContextType = {
-  selectedOptions: Array<string | null>;
-  setSelectedOptions: React.Dispatch<React.SetStateAction<Array<string | null>>>;
-  handleSubmit: () => void;
-  handleChange: (event: React.ChangeEvent<HTMLInputElement>, questionIndex: number) => void;
-};
-
-export const QuizContext = createContext<QuizContextType>({
-  selectedOptions: [],
-  setSelectedOptions: () => {},
-  handleSubmit: () => {},
-  handleChange: () => {},
-});
-
-export const QuizProvider: React.FC<QuizProviderProps> = ({ setShowQuiz, children }) => {
-  const [selectedOptions, setSelectedOptions] = useState<Array<string | null>>(Array(quizData.length).fill(null));
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>, questionIndex: number) => {
-    const updatedSelectedOptions = [...selectedOptions];
-    console.log('handleChange called')
-    updatedSelectedOptions[questionIndex] = event.target.value;
-    setSelectedOptions(updatedSelectedOptions);
-  };
-
-  const handleSubmit = () => {
-    let score = 0;
-    for (let i = 0; i < quizData.length; i++) {
-      if (selectedOptions[i] === quizData[i].option.correctanswer) {
-        score++;
-      }
-    }
-   console.log('handleSubmit called')
-    Swal.fire({
-      position: 'center',
-      icon: 'success',
-      title: `Score - ${score}`,
-      showConfirmButton: true,
-    }).then(() => setShowQuiz(false));
-  };
-
-  const quizContextValue: QuizContextType = {
-    selectedOptions,
-    setSelectedOptions,
-    handleSubmit,
-    handleChange,
-  };
-
-  return <QuizContext.Provider value={quizContextValue}>{children}</QuizContext.Provider>;
-};
-
-export const Quiz: React.FC<QuizProps> = ({ setShowQuiz }) => {
+export const Quiz: React.FC<QuizProps> = () => {
   const quizContext = useContext<QuizContextType>(QuizContext);
   const { selectedOptions, setSelectedOptions, handleSubmit, handleChange } = quizContext;
 

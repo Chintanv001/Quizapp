@@ -1,27 +1,33 @@
 import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { Quiz, QuizProvider } from './Component/Quiz';
+import { Quiz } from './Component/Quiz';
 import { Timer } from './Component/Timer';
-import { ThankYou } from './Component/ThankYou';
-
-
-
-
+import { QuizProvider } from './Context/Quizcontext';
+import { Answer } from './Component/Answer';
 
 function App() {
-  const [showQuiz , setShowQuiz] = useState<boolean>(true)
+  const [showQuiz , setShowQuiz] = useState<boolean>(false)
+  const [showTimer , setShowTimer] = useState<boolean>(true)
+  
   const time = new Date()
-  time.setSeconds(time.getSeconds() + 60);
+  time.setSeconds(time.getSeconds() + 20);
   return (
      
     <div className="App">
       
-      {showQuiz ? (<><QuizProvider setShowQuiz={setShowQuiz}>
-      <Timer setShowQuiz={setShowQuiz} expiryTimestamp={time} />
-      <Quiz setShowQuiz={setShowQuiz} />
+      <><QuizProvider setShowTimer={setShowTimer} setShowQuiz={setShowQuiz}>
+      {showTimer &&
+      <Timer setShowTimer={setShowTimer} setShowQuiz={setShowQuiz} expiryTimestamp={time} />
+      }
+      {showQuiz &&
+      <Quiz setShowQuiz={setShowQuiz} setShowTimer = {setShowTimer}  />
+      }
+      {
+        !showQuiz && !showTimer && <Answer/>
+      }
       </QuizProvider>
-      </>) : <ThankYou/>}
+      </>
     </div>
   );
 }
