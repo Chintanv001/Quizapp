@@ -1,32 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState  } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { Quiz } from './Component/Quiz';
-import { Timer } from './Component/Timer';
+import {BrowserRouter , Routes , Route , Navigate} from 'react-router-dom'
+import WelcomePage from './Component/WelcomePage';
+import LoginPage from './Component/LoginPage';
 import { QuizProvider } from './Context/Quizcontext';
 import { Answer } from './Component/Answer';
+import Home from './Component/Home';
 
 function App() {
-  const [showQuiz , setShowQuiz] = useState<boolean>(false)
-  const [showTimer , setShowTimer] = useState<boolean>(true)
   
-  const time = new Date()
-  time.setSeconds(time.getSeconds() + 20);
+  const [isLoggedIn , setIsLoggedIn] = useState(false)
+  
   return (
-     
+
     <div className="App">
+
+      <>
+      <BrowserRouter>
+      <QuizProvider >
+        
       
-      <><QuizProvider setShowTimer={setShowTimer} setShowQuiz={setShowQuiz}>
-      {showTimer &&
-      <Timer setShowTimer={setShowTimer} setShowQuiz={setShowQuiz} expiryTimestamp={time} />
-      }
-      {showQuiz &&
-      <Quiz setShowQuiz={setShowQuiz} setShowTimer = {setShowTimer}  />
-      }
-      {
-        !showQuiz && !showTimer && <Answer/>
-      }
+      <Routes>
+          <Route path="/" element={<Navigate to="/WelcomePage" />} />
+          <Route path="/WelcomePage" element={<WelcomePage isLoggedIn={isLoggedIn} />} />
+          <Route path="/LoginPage" element={<LoginPage setIsLoggedIn={setIsLoggedIn} />} />
+          <Route path="/Home" element={isLoggedIn ? <Home/> : <Navigate to="/LoginPage" />} />
+          <Route path="Answer" element={  <Answer /> }/>
+        </Routes>
+      
       </QuizProvider>
+      </BrowserRouter>
       </>
     </div>
   );

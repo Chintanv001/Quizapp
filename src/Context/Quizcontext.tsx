@@ -1,6 +1,7 @@
 import { createContext , useState } from "react";
 import Swal from 'sweetalert2';
 import { quizData } from '../Data/Quizdata';
+import { useNavigate } from "react-router-dom";
 
  export type QuizContextType = {
     selectedOptions: Array<string | null>;
@@ -9,10 +10,10 @@ import { quizData } from '../Data/Quizdata';
     handleChange: (event: React.ChangeEvent<HTMLInputElement>, questionIndex: number) => void;
   };
 
-  type QuizProviderProps = {
-    children: React.ReactNode;
-    setShowQuiz: (value: boolean) => void;
-    setShowTimer: (value: boolean) => void;
+  export type QuizProviderProps = {
+    children?: React.ReactNode;
+    
+    
   };
 
 export const QuizContext = createContext<QuizContextType>({
@@ -22,9 +23,9 @@ export const QuizContext = createContext<QuizContextType>({
     handleChange: () => {},
   });
 
-  export const QuizProvider: React.FC<QuizProviderProps> = ({ setShowQuiz, children , setShowTimer}) => {
+  export const QuizProvider: React.FC<QuizProviderProps> = ({ children}) => {
     const [selectedOptions, setSelectedOptions] = useState<Array<string | null>>(Array(quizData.length).fill(null));
-  
+    const navigate = useNavigate()
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>, questionIndex: number) => {
       const updatedSelectedOptions = [...selectedOptions];
       
@@ -45,7 +46,10 @@ export const QuizContext = createContext<QuizContextType>({
         icon: 'success',
         title: `Score - ${score}`,
         showConfirmButton: true,
-      }).then(() => {setShowQuiz(false); setShowTimer(false)});
+      }).then(() => {
+        navigate('/Answer')
+        
+      });
     };
   
     const quizContextValue: QuizContextType = {
@@ -53,6 +57,7 @@ export const QuizContext = createContext<QuizContextType>({
       setSelectedOptions,
       handleSubmit,
       handleChange,
+      
     };
   
     return <QuizContext.Provider value={quizContextValue}>{children}</QuizContext.Provider>;

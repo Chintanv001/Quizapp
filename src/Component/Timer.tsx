@@ -7,18 +7,19 @@ import { QuizContext } from "../Context/Quizcontext"
 
 type TimerProps = {
     expiryTimestamp: Date
-    setShowQuiz : (value : boolean) => void
-    setShowTimer : (value : boolean) => void
-    
+
+
+
 }
 
-export const Timer: React.FC<TimerProps> = ({ expiryTimestamp , setShowQuiz ,setShowTimer}) => {
- const {handleSubmit} = useContext(QuizContext)
+export const Timer: React.FC<TimerProps> = ({ expiryTimestamp }) => {
+    const { handleSubmit } = useContext(QuizContext)
 
     const {
         seconds,
         minutes,
         start,
+        pause
     } = useTimer({
         expiryTimestamp, onExpire: () => Swal.fire({
             title: 'Timeout',
@@ -28,14 +29,9 @@ export const Timer: React.FC<TimerProps> = ({ expiryTimestamp , setShowQuiz ,set
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Ok'
-          }).then((result) => {
-            if (result.isConfirmed) {
-             handleSubmit();
-            }else{
-                setShowQuiz(false);
-                setShowTimer(false)
-            }
-          }), autoStart: false
+        }).then(() => handleSubmit()
+
+        ), autoStart: true
     });
 
     const formattedMinutes = minutes.toString().padStart(2, '0');
@@ -43,10 +39,7 @@ export const Timer: React.FC<TimerProps> = ({ expiryTimestamp , setShowQuiz ,set
     return (
         <div>
             <h1 style={{ backgroundColor: "gray" }}>Timer {formattedMinutes} : {formattedSeconds}</h1>
-            <button onClick={()=>{
-                start();
-                setShowQuiz(true)
-            }} style={{boxSizing : "border-box" , backgroundColor : "green" , fontSize : 25  }}> Start Exam</button>
+
         </div>
     )
 }

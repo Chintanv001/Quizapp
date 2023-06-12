@@ -4,12 +4,9 @@ import { QuizContext } from '../Context/Quizcontext';
 import { QuizContextType } from '../Context/Quizcontext';
 
 
-export type QuizProps = {
-  setShowQuiz: (value: boolean) => void;
-  setShowTimer: (value: boolean) => void;
-};
 
-export const Quiz: React.FC<QuizProps> = () => {
+
+export const Quiz = () => {
   const quizContext = useContext<QuizContextType>(QuizContext);
   const { selectedOptions, setSelectedOptions, handleSubmit, handleChange } = quizContext;
 
