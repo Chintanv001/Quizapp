@@ -1,9 +1,11 @@
 import React, { useContext } from "react";
 import { QuizContext } from "../Context/Quizcontext";
 import { quizData } from "../Data/Quizdata";
+import { useNavigate } from "react-router-dom";
 
 export const Answer = () => {
   const { selectedOptions } = useContext(QuizContext);
+  const navigate = useNavigate()
 
   const isCorrect = (questionIndex: number) => {
     const selectedOption = selectedOptions[questionIndex];
@@ -16,8 +18,20 @@ export const Answer = () => {
     return selectedOption === option;
   };
 
+  const Logout = () => {
+    localStorage.clear()
+    navigate('/WelcomePage')
+    window.location.reload()
+  }
+
+  const NavigateToHomePage = () => {
+    navigate('/WelcomePage')
+    window.location.reload()
+  }
   return (
     <div>
+      <button onClick={Logout}>Logout</button>
+      <button onClick={NavigateToHomePage}>Go to Homepage</button>
       {quizData.map((question, questionIndex) => (
         <div key={questionIndex}>
           <h3 style={{ display: 'flex', alignItems: 'center', marginLeft: 60 }}>
