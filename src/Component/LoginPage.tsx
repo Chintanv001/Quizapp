@@ -9,28 +9,32 @@ export type LoginPageProps = {
 };
 
 const LoginPage = ({ setIsLoggedIn }: LoginPageProps) => {
-  const [values, setValues] = useState('');
   const navigate = useNavigate();
+  const storedUserInfo = localStorage.getItem('userInfo');
+  const [userInfo, setUserInfo] = useState<{ name: string; email: string }>(
+    storedUserInfo ? JSON.parse(storedUserInfo) : { name: '', email: '' }
+  );
 
-  const handleClick = () => {
-    signInWithPopup(auth, provider).then((data) => {
-      const email = data.user.email;
-      setValues(email || '');
-      localStorage.setItem('email', email || '');
+  const handleClick = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      const displayName = user.displayName;
+      const email = user.email;
+
+      setUserInfo({ name: displayName || '', email: email || '' });
+      localStorage.setItem('userInfo', JSON.stringify({ name: displayName, email }));
       setIsLoggedIn(true);
       navigate('/Home');
-    });
+    } catch (error) {
+      console.error('Google sign-in error:', error);
+    }
   };
-
-  useEffect(() => {
-    const storedEmail = localStorage.getItem('email');
-    setValues(storedEmail || '');
-  }, []);
 
   return (
     <div>
-      {values ? (
-        <Home />
+      {userInfo.email ? (
+        <Home name={userInfo.name} email={userInfo.email} />
       ) : (
         <button onClick={handleClick}>Sign in with Google</button>
       )}

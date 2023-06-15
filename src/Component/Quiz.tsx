@@ -8,7 +8,7 @@ import { QuizContextType } from '../Context/Quizcontext';
 
 export const Quiz = () => {
   const quizContext = useContext<QuizContextType>(QuizContext);
-  const { selectedOptions, setSelectedOptions, handleSubmit, handleChange } = quizContext;
+  const { selectedOptions, setSelectedOptions, handleSubmit, handleChange  } = quizContext;
 
   return (
     <div>
